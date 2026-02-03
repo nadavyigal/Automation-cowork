@@ -1,0 +1,6 @@
+flowchart LR
+  User[Directive] --> Orchestrator[BMAD Orchestration]
+  Orchestrator --> Exec[Python Execution]
+  Exec --> DB[(PostgreSQL)]
+  Exec --> APIs[External APIs]
+  Exec --> Email[Email Service]

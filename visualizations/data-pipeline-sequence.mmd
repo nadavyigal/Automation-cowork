@@ -1,0 +1,12 @@
+sequenceDiagram
+  participant Scheduler
+  participant ETL
+  participant SourceDB
+  participant Warehouse
+  participant DB
+
+  Scheduler->>ETL: Trigger 2 AM
+  ETL->>SourceDB: Extract rows
+  ETL->>ETL: Transform rows
+  ETL->>Warehouse: Load rows
+  ETL->>DB: Record execution

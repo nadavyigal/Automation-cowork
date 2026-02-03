@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: automation-db
+    environment:
+      POSTGRES_DB: automation_cowork
+      POSTGRES_USER: automation_user
+      POSTGRES_PASSWORD: changeme_in_production
+    ports:
+      - "5433:5432"
+    volumes:
+      - automation_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: automation-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@automation-cowork.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5051:80"
+    depends_on:
+      - postgres
+
+volumes:
+  automation_data:

@@ -1,0 +1,1 @@
+Story YAMLs will be generated here by BMAD /sm + *create-next-story.

@@ -1,0 +1,12 @@
+sequenceDiagram
+  participant Client
+  participant Webhook
+  participant Enrichment
+  participant DB
+  participant Email
+
+  Client->>Webhook: POST /api/webhook/lead
+  Webhook-->>Client: 202 Accepted
+  Webhook->>Enrichment: process lead
+  Enrichment->>DB: store job + results
+  Enrichment->>Email: send notification

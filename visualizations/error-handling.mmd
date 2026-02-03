@@ -1,0 +1,4 @@
+flowchart TD
+  A[Error] --> B[Retry]
+  B -->|Success| C[Continue]
+  B -->|Fail| D[Notify + Log]
