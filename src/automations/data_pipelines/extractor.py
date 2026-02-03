@@ -14,6 +14,9 @@ def extract_customers(since: datetime | None = None) -> list[dict[str, Any]]:
     if not settings.source_database_url:
         raise ValueError("SOURCE_DATABASE_URL is not configured")
 
+    if since:
+        logger.info(f"Incremental extract since {since.isoformat()}")
+
     engine = create_engine(settings.source_database_url, future=True)
     query = "SELECT id, email, first_name, last_name, updated_at FROM customers"
     params: dict[str, Any] = {}
