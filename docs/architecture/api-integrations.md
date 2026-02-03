@@ -12,3 +12,7 @@ Email services:
 
 AI:
 - OpenAI (self-healing)
+
+Usage tracking:
+- api_usage table logs provider usage counts and periods
+- free-tier limits enforced in code before API calls
