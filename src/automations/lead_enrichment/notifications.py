@@ -22,6 +22,38 @@ def send_email(subject: str, body: str, to_address: str) -> None:
     logger.warning("No email provider configured; skipping notification")
 
 
+def send_lead_notification(
+    *,
+    job_id: int,
+    email: str,
+    provider: str | None,
+    status: str,
+    error_message: str | None = None,
+) -> None:
+    if not settings.notify_email:
+        return
+
+    if status == "completed" and not settings.notify_on_success:
+        return
+
+    if status == "failed" and not settings.notify_on_failure:
+        return
+
+    subject = f"Lead Enrichment {status.upper()} - {email}"
+    body_lines = [
+        f"Job ID: {job_id}",
+        f"Email: {email}",
+        f"Status: {status}",
+    ]
+    if provider:
+        body_lines.append(f"Provider: {provider}")
+    if error_message:
+        body_lines.append(f"Error: {error_message}")
+
+    body = "\n".join(body_lines)
+    send_email(subject, body, settings.notify_email)
+
+
 def _send_smtp(subject: str, body: str, to_address: str) -> None:
     msg = EmailMessage()
     msg["Subject"] = subject

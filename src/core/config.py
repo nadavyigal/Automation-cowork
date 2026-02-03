@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     smtp_password: str | None = None
     smtp_from: str | None = None
     notify_email: str | None = None
+    notify_on_success: bool = True
+    notify_on_failure: bool = True
 
     sendgrid_api_key: str | None = None
     openai_api_key: str | None = None
