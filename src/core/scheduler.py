@@ -9,6 +9,7 @@ from loguru import logger
 
 from src.core.config import settings
 from src.automations.data_pipelines.etl_job import run_etl_job
+from src.automations.marketing_distribution.scheduler import run_marketing_distribution_job
 
 
 def start_scheduler() -> BackgroundScheduler:
@@ -22,9 +23,24 @@ def start_scheduler() -> BackgroundScheduler:
         replace_existing=True,
     )
 
+    if settings.marketing_enabled:
+        scheduler.add_job(
+            run_marketing_distribution_job,
+            trigger=CronTrigger(
+                hour=settings.marketing_daily_run_hour,
+                minute=settings.marketing_daily_run_minute,
+                timezone=timezone,
+            ),
+            id="daily_marketing_distribution",
+            replace_existing=True,
+        )
+
     scheduler.start()
     next_run = scheduler.get_job("daily_etl").next_run_time
     logger.info(f"Scheduler started. Next ETL run: {next_run}")
+    if settings.marketing_enabled:
+        marketing_next_run = scheduler.get_job("daily_marketing_distribution").next_run_time
+        logger.info(f"Next marketing run: {marketing_next_run}")
     return scheduler
 
 

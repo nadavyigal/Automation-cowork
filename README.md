@@ -20,6 +20,12 @@ Mermaid diagrams live in `visualizations/` and can be rendered in VS Code Mermai
 - Schedule: APScheduler cron job
 - Error Handling: Email alerts on failure, automatic retry
 
+### 3. Marketing Distribution
+- Trigger: Daily scheduler or webhook `POST /api/webhook/marketing/run-week`
+- Process: Pull GTM assets from marketing repo branch -> ingest CSV queue -> persist posts -> publish (dry-run or webhook live mode)
+- Schedule: Configurable via `MARKETING_DAILY_RUN_HOUR/MINUTE`
+- Error Handling: Run-level status + email notification summary
+
 ## Quick Start
 
 ```bash
@@ -38,6 +44,9 @@ alembic upgrade head
 
 # 5. Start webhook server
 uvicorn src.automations.lead_enrichment.webhook:app --reload
+
+# 5b. Start marketing distribution webhook (optional)
+uvicorn src.automations.marketing_distribution.webhook:app --reload --port 8001
 
 # 6. Start scheduler
 python src/core/scheduler.py
