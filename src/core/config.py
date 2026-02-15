@@ -26,6 +26,21 @@ class Settings(BaseSettings):
     openai_api_key: str | None = None
 
     scheduler_timezone: str = "Asia/Jerusalem"
+    marketing_enabled: bool = True
+    marketing_daily_run_hour: int = 8
+    marketing_daily_run_minute: int = 5
+
+    marketing_assets_repo_url: str | None = None
+    marketing_assets_branch: str = "version-2-marketing"
+    marketing_assets_local_dir: str = "runtime/marketing-assets"
+    marketing_csv_relative_path: str = "docs/gtm/week-1-social-publishing-sheet.csv"
+    marketing_execution_mode: str = "dry-run"
+
+    linkedin_publisher_webhook_url: str | None = None
+    x_publisher_webhook_url: str | None = None
+    reddit_publisher_webhook_url: str | None = None
+    community_publisher_webhook_url: str | None = None
+    newsletter_publisher_webhook_url: str | None = None
 
     log_level: str = "INFO"
     log_file: str = "logs/automation.log"
