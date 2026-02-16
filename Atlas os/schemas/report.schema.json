@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Atlas Morning Report",
+  "description": "Schema for the daily morning report output",
+  "type": "object",
+  "required": ["date", "products", "tasks_today", "founder_decisions"],
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "products": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "ci_status", "open_prs", "open_issues"],
+        "properties": {
+          "name": { "type": "string" },
+          "shipped_yesterday": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "open_prs": { "type": "integer", "minimum": 0 },
+          "open_issues": { "type": "integer", "minimum": 0 },
+          "p0_count": { "type": "integer", "minimum": 0 },
+          "p1_count": { "type": "integer", "minimum": 0 },
+          "ci_status": {
+            "type": "string",
+            "enum": ["passing", "failing", "no-runs"]
+          },
+          "e2e_status": {
+            "type": ["object", "null"],
+            "properties": {
+              "passing": { "type": "integer" },
+              "failing": { "type": "integer" },
+              "skipped": { "type": "integer" }
+            }
+          },
+          "notable_failures": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product": { "type": "string" },
+          "description": { "type": "string" },
+          "options": { "type": "array", "items": { "type": "string" } },
+          "recommendation": { "type": "string" }
+        }
+      }
+    },
+    "tasks_today": {
+      "type": "array",
+      "items": { "$ref": "task.schema.json" },
+      "minItems": 3,
+      "maxItems": 7
+    },
+    "week_summary": {
+      "type": "object",
+      "properties": {
+        "milestones": { "type": "array", "items": { "type": "string" } },
+        "risks": { "type": "array", "items": { "type": "string" } },
+        "dependencies": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "automation_opportunities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "time_saved_hours_per_week": { "type": "number" },
+          "roi": { "type": "string", "enum": ["high", "medium", "low"] }
+        }
+      }
+    },
+    "founder_decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "context": { "type": "string" },
+          "options": { "type": "array", "items": { "type": "string" } },
+          "recommendation": { "type": "string" },
+          "deadline": { "type": "string" }
+        }
+      }
+    }
+  }
+}

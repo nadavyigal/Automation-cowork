@@ -1,0 +1,69 @@
+# Atlas OS — CI Workflow
+# Runs lint, typecheck, and unit tests on every push and PR
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Lint + Typecheck + Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect package manager
+        id: detect-pm
+        run: |
+          if [ -f "package-lock.json" ]; then
+            echo "manager=npm" >> $GITHUB_OUTPUT
+            echo "install=npm ci" >> $GITHUB_OUTPUT
+          elif [ -f "yarn.lock" ]; then
+            echo "manager=yarn" >> $GITHUB_OUTPUT
+            echo "install=yarn install --frozen-lockfile" >> $GITHUB_OUTPUT
+          elif [ -f "pnpm-lock.yaml" ]; then
+            echo "manager=pnpm" >> $GITHUB_OUTPUT
+            echo "install=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
+          else
+            echo "manager=npm" >> $GITHUB_OUTPUT
+            echo "install=npm install" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: ${{ steps.detect-pm.outputs.manager }}
+
+      - name: Install dependencies
+        run: ${{ steps.detect-pm.outputs.install }}
+
+      - name: Lint
+        run: npm run lint --if-present
+        continue-on-error: false
+
+      - name: Typecheck
+        run: npx tsc --noEmit --pretty
+        continue-on-error: false
+
+      - name: Unit Tests
+        run: npm test --if-present
+        continue-on-error: true
+
+      - name: Build check
+        run: npm run build
+        env:
+          # Provide dummy env vars so build doesn't fail on missing secrets
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key' }}

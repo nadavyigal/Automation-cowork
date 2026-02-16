@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Atlas Task",
+  "description": "Unified task model across all Atlas-managed products",
+  "type": "object",
+  "required": ["id", "product", "area", "owner_agent", "priority", "status", "title"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique task ID. Format: {product}-{sequential_number}. E.g., rb-042, rs-018",
+      "pattern": "^(rb|rs|ac)-\\d{3,}$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short task title (max 120 chars)",
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description including context and expected behavior"
+    },
+    "product": {
+      "type": "string",
+      "enum": ["resume-builder", "runsmart", "automation-cowork"],
+      "description": "Which product this task belongs to"
+    },
+    "area": {
+      "type": "string",
+      "enum": ["frontend", "backend", "infra", "growth", "content", "design", "data", "e2e", "devops"],
+      "description": "Technical/functional area"
+    },
+    "owner_agent": {
+      "type": "string",
+      "enum": ["atlas", "product-agent", "distribution-agent", "monetization-agent", "founder"],
+      "description": "Which agent owns this task"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["p0-critical", "p1-high", "p2-medium", "p3-low"],
+      "description": "Priority level"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["triage", "ready", "in-progress", "review", "done", "blocked"],
+      "description": "Current task status"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["bug", "feature", "chore", "test", "docs", "automation"],
+      "description": "Task type"
+    },
+    "due_date": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "Due date in YYYY-MM-DD format"
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "github_issue": { "type": ["string", "null"], "format": "uri" },
+        "github_pr": { "type": ["string", "null"], "format": "uri" },
+        "ci_run": { "type": ["string", "null"], "format": "uri" },
+        "related_issues": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of acceptance criteria (each is a checkbox item)"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": ["low", "medium", "high"],
+      "description": "Risk assessment for this change"
+    },
+    "requires_founder_approval": {
+      "type": "boolean",
+      "default": false,
+      "description": "True for: production deploys, schema changes, auth changes, spending"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "version": "1.0.0",
+  "owner": "nadavyigal",
+  "timezone": "Asia/Jerusalem",
+  "products": {
+    "resume-builder": {
+      "name": "Resume Builder",
+      "repo": "nadavyigal/new-ResumeBuilder-ai-",
+      "app_url": "https://www.resumelybuilderai.com/he",
+      "deploy_url": "https://new-resume-builder-ai.vercel.app",
+      "stack": ["nextjs", "typescript", "supabase", "vercel"],
+      "default_branch": "main",
+      "deploy_platform": "vercel",
+      "has_playwright": true,
+      "has_ci": true
+    },
+    "runsmart": {
+      "name": "RunSmart",
+      "repo": "nadavyigal/Running-coach-",
+      "app_url": "https://www.runsmart-ai.com",
+      "deploy_url": "https://running-coach-puce.vercel.app",
+      "stack": ["nextjs", "typescript", "python", "supabase", "vercel"],
+      "default_branch": "main",
+      "deploy_platform": "vercel",
+      "has_playwright": false,
+      "has_ci": true
+    },
+    "automation-cowork": {
+      "name": "Automation Cowork",
+      "repo": "nadavyigal/Automation-cowork",
+      "stack": ["python", "fastapi", "postgresql", "docker"],
+      "default_branch": "main",
+      "deploy_platform": "docker",
+      "has_playwright": false,
+      "has_ci": false
+    }
+  },
+  "agents": {
+    "atlas": { "enabled": true, "prompt": "prompts/atlas.system.md" },
+    "distribution": { "enabled": true, "prompt": "prompts/distribution.system.md" },
+    "product": { "enabled": true, "prompt": "prompts/product.system.md" },
+    "monetization": { "enabled": false, "prompt": "prompts/monetization.system.future.md" }
+  },
+  "labels": {
+    "priority": ["p0-critical", "p1-high", "p2-medium", "p3-low"],
+    "area": ["frontend", "backend", "infra", "growth", "content", "design", "data"],
+    "agent": ["atlas", "product-agent", "distribution-agent", "founder-required"],
+    "type": ["bug", "feature", "chore", "test", "docs", "automation"],
+    "status": ["triage", "ready", "in-progress", "review", "done", "blocked"]
+  },
+  "secrets_required": [
+    "ATLAS_GITHUB_TOKEN — PAT with repo + workflow scopes",
+    "OPENAI_API_KEY — for AI features in products",
+    "SUPABASE_SERVICE_ROLE_KEY — per-product, in each repo",
+    "VERCEL_TOKEN — optional, for deploy status checks"
+  ],
+  "schedule": {
+    "morning_report": "0 7 * * 1-5",
+    "weekly_plan": "0 8 * * 0"
+  }
+}
